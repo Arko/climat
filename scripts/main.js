@@ -3,7 +3,7 @@ const width = 600;
 const height = 300;
 const margin = { top: 20, right: 0, bottom: 20, left: 20 };
 
-d3.dsv(';', 'data/NBCN-m.csv', function (d) {
+d3.dsv(';', 'data/NBCN-m_1864-2018.csv', function (d) {
     return {
         station: d.stn,
         year: d.time.substr(0, 4),
@@ -12,7 +12,7 @@ d3.dsv(';', 'data/NBCN-m.csv', function (d) {
     }
 }).then(function(data) {
 
-    const station = data.filter(d => d.station === 'NEU' && d.year === '2019');
+    const station = data.filter(d => d.station === 'NEU' && d.year === '2018');
     
     // Créer l'élément SVG et le configurer
     const svg = d3.select('.main')
