@@ -1,5 +1,22 @@
-# Réseau climatique - valeurs mensuelles
+# Projet Climat
+## Réseau suisse de mesures climatiques
 
-Demo: https://arko.github.io/climat/
+Accéder à la visualisation: https://arko.github.io/climat/
 
-Un projet de démo pour l'ajout de données au format csv avec D3.js
+### Cadre
+
+Un projet de démonstration pour l'usage des technologies web (HTML, CSS, JS), l'implémentation de [D3.js](https://d3js.org/) et l'organisation du code dans le cadre du cours de [Visualisation de données](https://applicationspub.unil.ch/interpub/noauth/php/Ud/ficheCours.php?v_enstyid=53406&v_ueid=174&v_langue=37).
+
+[Loïc Cattani](https://twitter.com/loiccattani), [Isaac Pante](https://twitter.com/IsaacPante) – [Université de Lausanne](https://www.unil.ch), [Faculté des lettre](https://www.unil.ch/lettres), [SLI](https://www.unil.ch/sli).
+
+### Sources des données
+
+- [opendata.swiss](https://opendata.swiss/fr/dataset/klimamessnetz-monatswerte)
+- [MétéoSuisse](https://www.meteosuisse.admin.ch/home/systemes-de-mesure-et-de-prevision/stations-au-sol/reseau-suisse-de-mesures-climatiques.html)
+
+Conditions d'utilisation des données:
+
+- Utilisation libre.
+- Obligation d’indiquer la source.
+- Utilisation commerciale uniquement avec l’autorisation du fournisseur des données.
+
