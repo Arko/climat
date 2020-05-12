@@ -3,6 +3,39 @@ const width = 600;
 const height = 300;
 const margin = { top: 20, right: 0, bottom: 20, left: 20 };
 
+// Dictionnaire de stations
+const stations = [
+	{ id: 'ALT', name: 'Altdorf', pos: '8:37/46:53', alt: 438 },
+	{ id: 'ANT', name: 'Andermatt', pos: '8:35/46:38', alt: 1438 },
+	{ id: 'RAG', name: 'Bad Ragaz', pos: '9:30/47:01', alt: 496 },
+	{ id: 'BAS', name: 'Basel / Binningen', pos: '7:35/47:32', alt: 316 },
+	{ id: 'BER', name: 'Bern / Zollikofen', pos: '7:28/46:59', alt: 552 },
+	{ id: 'CHD', name: 'Château-d\'Oex', pos: '7:08/46:29', alt: 1028 },
+	{ id: 'CHM', name: 'Chaumont', pos: '6:59/47:03', alt: 1136 },
+	{ id: 'GSB', name: 'Col du Grand St-Bernard', pos: '7:10/45:52', alt: 2472 },
+	{ id: 'DAV', name: 'Davos', pos: '9:51/46:49', alt: 1594 },
+	{ id: 'ELM', name: 'Elm', pos: '9:11/46:55', alt: 957 },
+	{ id: 'ENG', name: 'Engelberg', pos: '8:25/46:49', alt: 1035 },
+	{ id: 'GVE', name: 'Genèvve / Cointrin', pos: '6:08/46:15', alt: 410 },
+	{ id: 'GRC', name: 'Grächen', pos: '7:50/46:12', alt: 1605 },
+	{ id: 'GRH', name: 'Grimsel Hospiz', pos: '8:20/46:34', alt: 1980 },
+	{ id: 'JUN', name: 'Jungfraujoch', pos: '7:59/46:33', alt: 3580 },
+	{ id: 'CDF', name: 'La Chaux-de-Fonds', pos: '6:48/47:05', alt: 1017 },
+	{ id: 'OTL', name: 'Locarno / Monti', pos: '8:47/46:10', alt: 366 },
+	{ id: 'LUG', name: 'Lugano', pos: '8:58/46:00', alt: 273 },
+	{ id: 'LUZ', name: 'Luzern', pos: '8:18/47:02', alt: 454 },
+	{ id: 'MER', name: 'Meiringen', pos: '8:10/46:44', alt: 588 },
+	{ id: 'NEU', name: 'Neuchâtel', pos: '6:57/47:00', alt: 485 },
+	{ id: 'PAY', name: 'Payerne', pos: '6:57/46:49', alt: 490 },
+	{ id: 'SAM', name: 'Samedan', pos: '9:53/46:32', alt: 1708 },
+	{ id: 'SAE', name: 'Säntis', pos: '9:21/47:15', alt: 2502 },
+	{ id: 'SBE', name: 'S. Bernardino', pos: '9:11/46:28', alt: 1638 },
+	{ id: 'SIA', name: 'Segl-Maria', pos: '9:46/46:26', alt: 1804 },
+	{ id: 'SIO', name: 'Sion', pos: '7:20/46:13', alt: 482 },
+	{ id: 'STG', name: 'St. Gallen', pos: '9:24/47:26', alt: 775 },
+	{ id: 'SMA', name: 'Zürich / Fluntern', pos: '8:34/47:23', alt: 555 },
+];
+
 // Données complètes
 let meteoData;
 
@@ -27,9 +60,10 @@ function loadData() {
 	// Attention, il s'agit d'une opération asynchrone !
 	// Une fois les données chargées, la promise sera résolue (.then) et
 	// le callback `onDataLoaded` sera appelé en passant les données en paramètre
-	d3.dsv(';', 'data/NBCN-m_1864-2018.csv', function (d) {
+	d3.dsv(';', 'data/NBCN-m.csv', function (d) {
 		return {
 			station: d.stn,
+			stationLongName: getStationLongName(d.stn),
 			year: parseInt(d.time.substr(0, 4)),
 			month: parseInt(d.time.substr(4, 2)),
 			temp_moy: parseFloat(d.tre200m0)
@@ -37,13 +71,24 @@ function loadData() {
 	}).then(onDataLoaded);
 }
 
+function getStationLongName(station) {
+	return stations.find(s => s.id === station).name;
+}
+
 function onDataLoaded(data) {
 	// Stocker ces données dans une variable déclarée dans le scope de ce
 	// script. Permettant ainsi d'utiliser ces données dans d'autres fonctions
 	meteoData = data;
+
+	d3.select('#stations')
+		.selectAll('option')
+		.data(stations)
+		.join('option')
+			.attr('value', d => d.id)
+			.text(d => d.name)
 	
 	// Executer le code D3 des visualisations avec des paramètres par défaut
-	graphMonthlyAverageTemperatures('NEU', 2018);
+	graphMonthlyAverageTemperatures('NEU', 2019);
 }
 
 // Fonction de création et préparation des éléments stables de la visualisation
@@ -96,6 +141,12 @@ function setupMonthlyAverageTemperatures() {
 		.attr('transform', `translate(${margin.left}, 0)`)
 		.call(d3.axisLeft(matScaleY))
 		.call(g => g.select('.domain').remove());
+
+	// Enregistrement de l'événement de changement sur le menu local stations
+	d3.select('#stations').on('change', (e) => {
+		const station = d3.event.target.value;
+		graphMonthlyAverageTemperatures(station, 2019);
+	})
 }
 
 // Fonction d'affichage de la visualisation
