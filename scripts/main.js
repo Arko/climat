@@ -39,6 +39,10 @@ const stations = [
 // Données complètes
 let meteoData;
 
+// Etat actuel de la visualisation
+let currentStation = 'NEU';
+let currentYear = 2018;
+
 // Déclarations pour la visualisation monthlyAverageTemperatures ("mat")
 // Sélections D3 d'éléments SVG (groupes)
 let matBars;
@@ -60,7 +64,7 @@ function loadData() {
 	// Attention, il s'agit d'une opération asynchrone !
 	// Une fois les données chargées, la promise sera résolue (.then) et
 	// le callback `onDataLoaded` sera appelé en passant les données en paramètre
-	d3.dsv(';', 'data/NBCN-m.csv', function (d) {
+	d3.dsv(';', `data/NBCN-m-${currentStation}-1864-2018.csv`, function (d) {
 		return {
 			station: d.stn,
 			stationLongName: getStationLongName(d.stn),
@@ -80,15 +84,24 @@ function onDataLoaded(data) {
 	// script. Permettant ainsi d'utiliser ces données dans d'autres fonctions
 	meteoData = data;
 
+	// Construire le menu de sélection des stations et maintenir à jour la sélection
 	d3.select('#stations')
 		.selectAll('option')
 		.data(stations)
 		.join('option')
 			.attr('value', d => d.id)
 			.text(d => d.name)
-	
+			.each(function (d) {
+				const option = d3.select(this);
+				if (d.id === currentStation) {
+					option.attr('selected', '');
+				} else {
+					option.attr('selected', null);
+				}
+			})
+
 	// Executer le code D3 des visualisations avec des paramètres par défaut
-	graphMonthlyAverageTemperatures('NEU', 2019);
+	graphMonthlyAverageTemperatures();
 }
 
 // Fonction de création et préparation des éléments stables de la visualisation
@@ -145,16 +158,17 @@ function setupMonthlyAverageTemperatures() {
 	// Enregistrement de l'événement de changement sur le menu local stations
 	d3.select('#stations').on('change', (e) => {
 		const station = d3.event.target.value;
-		graphMonthlyAverageTemperatures(station, 2019);
+		currentStation = station;
+		loadData(); // Charger les données correspondantes 
 	})
 }
 
 // Fonction d'affichage de la visualisation
 // "MonthlyAverageTemperatures" ("mat") - Execution potentiellement multiple
-function graphMonthlyAverageTemperatures(station, year) {
+function graphMonthlyAverageTemperatures() {
 	
 	// Filtrer les données pour isoler la station et l'année
-	const data = meteoData.filter(d => d.station === station && d.year === year);
+	const data = meteoData.filter(d => d.station === currentStation && d.year === currentYear);
 
 	// Barres
 	matBars.selectAll('rect')
@@ -188,7 +202,7 @@ setup();
 
 // TODO:
 // [x] monthlyAverageTemperatures viz
-// [ ] Implement station selection menu
+// [x] Implement station selection menu
 // [ ] Implement year change with slider
 // [ ] Implement swiss map for station selection
 // [ ] yearlyAverageTemperatures viz
