@@ -161,6 +161,14 @@ function setupMonthlyAverageTemperatures() {
 		currentStation = station;
 		loadData(); // Charger les données correspondantes 
 	})
+
+	// Enregistrement de l'événement de changement sur le menu local stations
+	d3.select('#year').on('input', (e) => {
+		const year = d3.event.target.value;
+		currentYear = parseInt(year);
+		d3.select('.current-year').text(currentYear)
+		graphMonthlyAverageTemperatures(); // Mettre à jour la visualisation
+	})
 }
 
 // Fonction d'affichage de la visualisation
@@ -203,7 +211,7 @@ setup();
 // TODO:
 // [x] monthlyAverageTemperatures viz
 // [x] Implement station selection menu
-// [ ] Implement year change with slider
+// [x] Implement year change with slider
 // [ ] Implement swiss map for station selection
 // [ ] yearlyAverageTemperatures viz
 // [ ] Animate visualizations

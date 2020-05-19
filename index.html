@@ -11,13 +11,19 @@
     <h1>Réseau suisse de mesures climatiques</h1>
     
     <div class="mat">
-        <h2>Températures moyennes mensuelles en 2018</h2>
+        <h2>Températures moyennes mensuelles en <span class="current-year">2018</span></h2>
         <div>
             <label for="stations">Station</label>
             <select id="stations">
                 <option>Choisir...</option>
                 <option value="ALT">Altdorf</option>
             </select>
+        </div>
+        <div>
+            <label for="year">Année</label>
+            <small>1864</small>
+            <input type="range" id="year" name="year" min="1864" max="2018" step="1" value="2018">
+            <small>2018</small>
         </div>
     </div>
 
