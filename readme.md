@@ -1,7 +1,7 @@
 # Projet Climat
 ## Réseau suisse de mesures climatiques
 
-Accéder à la visualisation: https://arko.github.io/climat/
+Accéder à la visualisation: https://loiccattani.github.io/climat/
 
 ### Cadre
 
